@@ -40,11 +40,15 @@ services:
       - ./mosquitto/passwd:/mosquitto/config/passwd:ro
       - mosquitto-data:/mosquitto/data
 
-  # telegraf:
-  #   container_name: telegraf
-  #   image: telegraf
-  #   volumes:
-  #     -
+  telegraf:
+    container_name: telegraf
+    image: telegraf
+    depends_on:
+      - mosquitto
+      - influx
+    env_file: .env
+    volumes:
+      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
 
 volumes:
   caddy-data:
