@@ -9,3 +9,14 @@ The TIG stack — Telegraf (ingest), InfluxDB 3 Core (storage), Grafana (dashboa
 ## Key decisions
 
 **RMS is computed on the device, not in the backend.** The microphone is sampled at ~2 kHz and reduced to a single RMS (loudness) value per second before being published. The driving reason is _privacy_: raw audio samples can be reconstructed into audible speech, and a database holding them would effectively be a permanent wiretap. An RMS-per-second is just a loudness curve — not reversible into audio. As a side benefit, this cuts the data rate by ~2000× and means downstream queries never have to decimate raw samples.
+
+## Setup
+
+Uses **InfluxDB 3 Core**, which requires an admin token. After `docker compose up -d`:
+
+```sh
+docker compose exec influx influxdb3 create token --admin
+docker compose exec influx influxdb3 create database iot --token "$TOKEN"
+```
+
+Save the token from the first command as `TOKEN=…` in `.env`.
