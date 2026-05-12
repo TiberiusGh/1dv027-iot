@@ -30,8 +30,25 @@ services:
     volumes:
       - grafana-data:/var/lib/grafana
 
+  mosquitto:
+    container_name: mosquitto
+    image: eclipse-mosquitto
+    ports:
+      - '127.0.0.1:1883:1883'
+    volumes:
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - ./mosquitto/passwd:/mosquitto/config/passwd:ro
+      - mosquitto-data:/mosquitto/data
+
+  # telegraf:
+  #   container_name: telegraf
+  #   image: telegraf
+  #   volumes:
+  #     -
+
 volumes:
   caddy-data:
   caddy-config:
   influxDB-data:
   grafana-data:
+  mosquitto-data:
