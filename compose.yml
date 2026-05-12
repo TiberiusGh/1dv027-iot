@@ -1,0 +1,37 @@
+services:
+  caddy:
+    container_name: caddy
+    image: caddy
+    ports:
+      - '8234:80'
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy-data:/data # certs + automatic HTTPS state
+      - caddy-config:/config # autosaved config
+
+  influx:
+    container_name: influxDB
+    image: influxdb:3-core
+    command:
+      - influxdb3
+      - serve
+      - --node-id=node0
+      - --object-store=file
+      - --data-dir=/var/lib/influxdb3/data
+      - --plugin-dir=/var/lib/influxdb3/plugins
+    volumes:
+      - influxDB-data:/var/lib/influxdb3
+
+  grafana:
+    depends_on:
+      - caddy
+    container_name: grafana
+    image: grafana/grafana
+    volumes:
+      - grafana-data:/var/lib/grafana
+
+volumes:
+  caddy-data:
+  caddy-config:
+  influxDB-data:
+  grafana-data:

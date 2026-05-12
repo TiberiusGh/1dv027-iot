@@ -1,0 +1,7 @@
+http://grafana.localhost {
+    reverse_proxy grafana:3000
+}
+
+http://influx.localhost {
+    reverse_proxy influxDB:8181
+}
