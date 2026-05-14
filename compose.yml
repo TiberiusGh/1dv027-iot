@@ -1,15 +1,4 @@
 services:
-  caddy:
-    container_name: caddy
-    image: caddy
-    ports:
-      - '8234:80'
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
-      - caddy-data:/data # certs + automatic HTTPS state
-      - caddy-config:/config # autosaved config
-    restart: unless-stopped
-
   influx:
     container_name: influxDB
     image: influxdb:3-core
@@ -25,10 +14,10 @@ services:
     restart: unless-stopped
 
   grafana:
-    depends_on:
-      - caddy
     container_name: grafana
     image: grafana/grafana
+    ports:
+      - '8320:3000'
     volumes:
       - grafana-data:/var/lib/grafana
     restart: unless-stopped
@@ -56,8 +45,6 @@ services:
     restart: unless-stopped
 
 volumes:
-  caddy-data:
-  caddy-config:
   influxDB-data:
   grafana-data:
   mosquitto-data:
