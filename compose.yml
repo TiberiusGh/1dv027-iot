@@ -8,6 +8,7 @@ services:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy-data:/data # certs + automatic HTTPS state
       - caddy-config:/config # autosaved config
+    restart: unless-stopped
 
   influx:
     container_name: influxDB
@@ -21,6 +22,7 @@ services:
       - --plugin-dir=/var/lib/influxdb3/plugins
     volumes:
       - influxDB-data:/var/lib/influxdb3
+    restart: unless-stopped
 
   grafana:
     depends_on:
@@ -29,6 +31,7 @@ services:
     image: grafana/grafana
     volumes:
       - grafana-data:/var/lib/grafana
+    restart: unless-stopped
 
   mosquitto:
     container_name: mosquitto
@@ -39,6 +42,7 @@ services:
       - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
       - ./mosquitto/passwd:/mosquitto/config/passwd:ro
       - mosquitto-data:/mosquitto/data
+    restart: unless-stopped
 
   telegraf:
     container_name: telegraf
@@ -49,6 +53,7 @@ services:
     env_file: .env
     volumes:
       - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    restart: unless-stopped
 
 volumes:
   caddy-data:
