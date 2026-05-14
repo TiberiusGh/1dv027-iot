@@ -34,7 +34,7 @@ services:
     container_name: mosquitto
     image: eclipse-mosquitto
     ports:
-      - '127.0.0.1:1883:1883'
+      - '172.17.0.1:1883:1883' # docker0 gateway — host + bridge containers only, no LAN
     volumes:
       - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
       - ./mosquitto/passwd:/mosquitto/config/passwd:ro
