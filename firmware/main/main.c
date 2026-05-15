@@ -1,17 +1,25 @@
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
+#include "esp_check.h"
 #include "esp_log.h"
+#include "nvs_flash.h"
 
-#define LOG_INTERVAL_MS 1000
+#include "esp_zigbee_core.h"
+
+#include "source_fake.h"
+#include "zigbee.h"
 
 static const char *TAG = "screams";
 
 void app_main(void)
 {
-    ESP_LOGI(TAG, "Screams sensor booting...");
+    ESP_ERROR_CHECK(nvs_flash_init());
 
-    while (true) {
-        ESP_LOGI(TAG, "alive");
-        vTaskDelay(pdMS_TO_TICKS(LOG_INTERVAL_MS));
-    }
+    esp_zb_platform_config_t platform_cfg = {
+        .radio_config = { .radio_mode = ZB_RADIO_MODE_NATIVE },
+        .host_config  = { .host_connection_mode = ZB_HOST_CONNECTION_MODE_NONE },
+    };
+    ESP_ERROR_CHECK(esp_zb_platform_config(&platform_cfg));
+
+    ESP_LOGI(TAG, "Screams sensor booting (Zigbee ED)...");
+    zigbee_start();
+    source_fake_start(ZIGBEE_ENDPOINT_ID);
 }

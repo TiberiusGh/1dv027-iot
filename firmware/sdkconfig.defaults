@@ -1,1 +1,18 @@
 CONFIG_IDF_TARGET="esp32h2"
+
+# Flash size (matches dev kit)
+CONFIG_ESPTOOLPY_FLASHSIZE_4MB=y
+CONFIG_ESPTOOLPY_FLASHSIZE="4MB"
+
+# Custom partition table for Zigbee NVS
+CONFIG_PARTITION_TABLE_CUSTOM=y
+CONFIG_PARTITION_TABLE_CUSTOM_FILENAME="partitions.csv"
+
+# Zigbee end device on native 802.15.4 radio
+CONFIG_ZB_ENABLED=y
+CONFIG_ZB_ZED=y
+CONFIG_ZB_RADIO_NATIVE=y
+
+# Larger main task stack (Zigbee init eats some)
+CONFIG_ESP_MAIN_TASK_STACK_SIZE=4096
+CONFIG_FREERTOS_HZ=1000
