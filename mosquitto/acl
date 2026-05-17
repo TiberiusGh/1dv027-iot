@@ -1,0 +1,11 @@
+user script
+topic readwrite #
+
+user telegraf
+topic readwrite #
+
+user ha
+topic readwrite #
+
+user buzzer
+topic write screams/cmd/#
