@@ -21,6 +21,9 @@ services:
     environment:
       - GF_SERVER_ROOT_URL=https://screams.tiberiusgh.com/grafana/
       - GF_SERVER_SERVE_FROM_SUB_PATH=true
+      - GF_SECURITY_ALLOW_EMBEDDING=true
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer
     volumes:
       - grafana-data:/var/lib/grafana
     restart: unless-stopped
