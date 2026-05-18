@@ -4,6 +4,7 @@
 
 #include "esp_zigbee_core.h"
 
+#include "buzzer.h"
 #include "source_fake.h"
 #include "zigbee.h"
 
@@ -20,6 +21,7 @@ void app_main(void)
     ESP_ERROR_CHECK(esp_zb_platform_config(&platform_cfg));
 
     ESP_LOGI(TAG, "Screams sensor booting (Zigbee ED)...");
+    buzzer_init();
     zigbee_start();
     source_fake_start(ZIGBEE_ENDPOINT_ID);
 }

@@ -9,7 +9,9 @@
 #include "esp_zigbee_core.h"
 #include "ha/esp_zigbee_ha_standard.h"
 #include "zcl/esp_zigbee_zcl_analog_input.h"
+#include "zcl/esp_zigbee_zcl_on_off.h"
 
+#include "buzzer.h"
 #include "source_fake.h"
 
 static const char *TAG = "zigbee";
@@ -37,6 +39,24 @@ static void retry_steering(uint8_t mode)
     esp_zb_bdb_start_top_level_commissioning(mode);
 }
 
+static esp_err_t handle_set_attr(const esp_zb_zcl_set_attr_value_message_t *msg)
+{
+    if (msg->info.cluster != ESP_ZB_ZCL_CLUSTER_ID_ON_OFF) return ESP_OK;
+    if (msg->attribute.id != ESP_ZB_ZCL_ATTR_ON_OFF_ON_OFF_ID) return ESP_OK;
+    if (*(uint8_t *)msg->attribute.data.value != 1) return ESP_OK;
+
+    buzzer_pulse();
+    return ESP_OK;
+}
+
+static esp_err_t action_handler(esp_zb_core_action_callback_id_t callback_id, const void *message)
+{
+    if (callback_id == ESP_ZB_CORE_SET_ATTR_VALUE_CB_ID) {
+        return handle_set_attr((const esp_zb_zcl_set_attr_value_message_t *)message);
+    }
+    return ESP_OK;
+}
+
 static esp_zb_cluster_list_t *build_clusters(void)
 {
     esp_zb_cluster_list_t *clusters = esp_zb_zcl_cluster_list_create();
@@ -62,6 +82,10 @@ static esp_zb_cluster_list_t *build_clusters(void)
     esp_zb_attribute_list_t *ai = esp_zb_analog_input_cluster_create(&ai_cfg);
     esp_zb_analog_input_cluster_add_attr(ai, ESP_ZB_ZCL_ATTR_ANALOG_INPUT_DESCRIPTION_ID, AI_DESCRIPTION);
     esp_zb_cluster_list_add_analog_input_cluster(clusters, ai, ESP_ZB_ZCL_CLUSTER_SERVER_ROLE);
+
+    esp_zb_on_off_cluster_cfg_t on_off_cfg = { .on_off = false };
+    esp_zb_attribute_list_t *on_off = esp_zb_on_off_cluster_create(&on_off_cfg);
+    esp_zb_cluster_list_add_on_off_cluster(clusters, on_off, ESP_ZB_ZCL_CLUSTER_SERVER_ROLE);
 
     return clusters;
 }
@@ -153,6 +177,8 @@ static void zigbee_task(void *arg)
     esp_read_mac(ieee, ESP_MAC_IEEE802154);
     ESP_LOGI(TAG, "Local IEEE address: %02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x",
              ieee[0], ieee[1], ieee[2], ieee[3], ieee[4], ieee[5], ieee[6], ieee[7]);
+
+    esp_zb_core_action_handler_register(action_handler);
 
     ESP_ERROR_CHECK(esp_zb_start(false));
     esp_zb_stack_main_loop();

@@ -1,7 +1,8 @@
 # Firmware — screams-sensor-h2
 
 ESP32-H2 Zigbee end device. Publishes a loudness scalar 10× per second to a ZBT-2
-coordinator running ZHA in Home Assistant.
+coordinator running ZHA in Home Assistant, and also accepts a buzz command back
+the other way (HA → ZHA → device → GPIO → piezo beep).
 
 ## Build & flash
 
@@ -21,8 +22,9 @@ idf.py erase-flash flash monitor
 ## Layout
 
 - [main/main.c](main/main.c) — wires the modules together
-- [main/zigbee.c](main/zigbee.c) — radio, clusters, BDB join/rejoin/retry
+- [main/zigbee.c](main/zigbee.c) — radio, clusters, BDB join/rejoin/retry, On/Off attribute callback
 - [main/source_fake.c](main/source_fake.c) — placeholder sample source (sine + spikes) until the real ADC/mic source lands
+- [main/buzzer.c](main/buzzer.c) — GPIO10 active-piezo driver, one-shot 200 ms pulse
 
 ## Key choices
 
@@ -49,6 +51,12 @@ battery dies at 3 a.m. is a worse product than one with a cable.
 
 **NVS retained across reboots** (`esp_zb_nvram_erase_at_start(false)`). The
 device rejoins its prior network on power cycle without needing to re-pair.
+
+**On/Off cluster (0x0006) + GPIO10 active piezo.** Receives a "buzz" command
+from HA. On any `On` write, firmware drives GPIO10 HIGH for 200 ms — that's the
+whole device-side contract. HA owns the on→off cycle in its automation (turn_on,
+short delay, turn_off), so the device never has to fight HA's optimistic state
+model.
 
 ## ZHA pairing
 
