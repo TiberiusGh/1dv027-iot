@@ -13,7 +13,7 @@
 	}
 
 	handle /signin {
-		redir / 302
+		redir * / 302
 	}
 
 	handle {
