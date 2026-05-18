@@ -2,22 +2,25 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Screams sensor</title>
-	<style>
-		body { font-family: system-ui, sans-serif; max-width: 40rem; margin: 4rem auto; padding: 0 1rem; }
-		h1 { font-weight: 600; }
-		code { background: #eee; padding: 0.1rem 0.3rem; border-radius: 3px; }
-	</style>
+	<link rel="stylesheet" href="/style.css">
 </head>
 <body>
 	<h1>Screams sensor</h1>
-	<p>Placeholder. Dashboard and buzz button arrive in B6.</p>
-	<p>Routes wired so far:</p>
-	<ul>
-		<li><code>/</code> &mdash; this page</li>
-		<li><code>/grafana/</code> &mdash; charts (sub-path config in B5)</li>
-		<li><code>/mqtt</code> &mdash; MQTT over WebSockets</li>
-		<li><code>/whoami</code> &mdash; auth probe</li>
-	</ul>
+
+	<div class="panels">
+		<iframe src="/grafana/d-solo/adm6d76/iot-screams?orgId=1&timezone=browser&refresh=auto&panelId=panel-1"></iframe>
+		<iframe src="/grafana/d-solo/adm6d76/iot-screams?orgId=1&timezone=browser&refresh=auto&panelId=panel-2"></iframe>
+	</div>
+
+	<div class="controls">
+		<button id="buzz" class="hidden" type="button">Buzz</button>
+		<a id="login" class="hidden" href="/whoami">Sign in to enable controls</a>
+		<span id="status" class="status"></span>
+	</div>
+
+	<script src="https://unpkg.com/mqtt@5/dist/mqtt.min.js"></script>
+	<script src="/app.js"></script>
 </body>
 </html>

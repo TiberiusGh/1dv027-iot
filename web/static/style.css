@@ -1,0 +1,70 @@
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+
+body {
+	font-family: system-ui, sans-serif;
+	max-width: 60rem;
+	margin: 0 auto;
+	padding: 1.5rem 1rem;
+}
+
+h1 {
+	font-weight: 600;
+	margin: 0 0 1rem;
+	font-size: clamp(1.5rem, 4vw, 2rem);
+}
+
+.panels {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 1rem;
+	margin: 1rem 0;
+}
+
+.panels iframe {
+	border: 0;
+	width: 100%;
+	min-height: 14rem;
+}
+
+@media (min-width: 48rem) {
+	.panels { grid-template-columns: 1fr 1fr; }
+	.panels iframe { min-height: 16rem; }
+}
+
+.controls {
+	margin: 1.5rem 0;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 1rem;
+}
+
+button {
+	font: inherit;
+	padding: 0.75rem 1.5rem;
+	min-height: 2.75rem;
+	border-radius: 8px;
+	border: 1px solid currentColor;
+	background: transparent;
+	cursor: pointer;
+	touch-action: manipulation;
+}
+
+button:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.status {
+	font-size: 0.9rem;
+	opacity: 0.75;
+	flex: 1 1 100%;
+}
+
+@media (min-width: 30rem) {
+	.status { flex: 1 1 auto; }
+}
+
+.hidden { display: none; }
+a { color: inherit; }
