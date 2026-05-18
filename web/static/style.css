@@ -1,28 +1,71 @@
-:root { color-scheme: light dark; }
+:root {
+	color-scheme: light dark;
+	--bg: #f7f7f8;
+	--surface: #ffffff;
+	--border: #e5e7eb;
+	--text: #111827;
+	--muted: #6b7280;
+	--accent: #2563eb;
+	--accent-hover: #1d4ed8;
+	--accent-text: #ffffff;
+	--shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.04);
+	--radius: 12px;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--bg: #0b0b0d;
+		--surface: #16171a;
+		--border: #2a2c30;
+		--text: #f3f4f6;
+		--muted: #9ca3af;
+		--accent: #3b82f6;
+		--accent-hover: #60a5fa;
+		--shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 4px 12px rgba(0, 0, 0, 0.25);
+	}
+}
+
 * { box-sizing: border-box; }
 
 body {
-	font-family: system-ui, sans-serif;
+	font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+	background: var(--bg);
+	color: var(--text);
 	max-width: 60rem;
 	margin: 0 auto;
-	padding: 1.5rem 1rem;
+	padding: 2rem 1.25rem 4rem;
+	line-height: 1.5;
+}
+
+header {
+	margin-bottom: 1.5rem;
 }
 
 h1 {
 	font-weight: 600;
-	margin: 0 0 1rem;
+	margin: 0;
 	font-size: clamp(1.5rem, 4vw, 2rem);
+	letter-spacing: -0.01em;
+}
+
+.tagline {
+	color: var(--muted);
+	font-size: 0.95rem;
+	margin: 0.25rem 0 0;
 }
 
 .panels {
 	display: grid;
 	grid-template-columns: 1fr;
 	gap: 1rem;
-	margin: 1rem 0;
+	margin: 1rem 0 1.75rem;
 }
 
 .panels iframe {
-	border: 0;
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	box-shadow: var(--shadow);
+	background: var(--surface);
 	width: 100%;
 	min-height: 14rem;
 }
@@ -33,32 +76,38 @@ h1 {
 }
 
 .controls {
-	margin: 1.5rem 0;
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
 	gap: 1rem;
+	padding: 1rem 1.25rem;
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	box-shadow: var(--shadow);
 }
 
 button {
 	font: inherit;
-	padding: 0.75rem 1.5rem;
+	font-weight: 500;
+	padding: 0.65rem 1.4rem;
 	min-height: 2.75rem;
 	border-radius: 8px;
-	border: 1px solid currentColor;
-	background: transparent;
+	border: 0;
+	background: var(--accent);
+	color: var(--accent-text);
 	cursor: pointer;
 	touch-action: manipulation;
+	transition: background 0.15s ease, transform 0.05s ease;
 }
 
-button:disabled {
-	opacity: 0.5;
-	cursor: not-allowed;
-}
+button:hover:not(:disabled) { background: var(--accent-hover); }
+button:active:not(:disabled) { transform: translateY(1px); }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .status {
 	font-size: 0.9rem;
-	opacity: 0.75;
+	color: var(--muted);
 	flex: 1 1 100%;
 }
 
@@ -66,5 +115,12 @@ button:disabled {
 	.status { flex: 1 1 auto; }
 }
 
+a {
+	color: var(--accent);
+	text-decoration: none;
+	font-weight: 500;
+}
+
+a:hover { text-decoration: underline; }
+
 .hidden { display: none; }
-a { color: inherit; }
