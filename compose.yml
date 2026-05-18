@@ -18,6 +18,9 @@ services:
     image: grafana/grafana
     ports:
       - '8320:3000'
+    environment:
+      - GF_SERVER_ROOT_URL=https://screams.tiberiusgh.com/grafana/
+      - GF_SERVER_SERVE_FROM_SUB_PATH=true
     volumes:
       - grafana-data:/var/lib/grafana
     restart: unless-stopped
@@ -51,6 +54,8 @@ services:
     depends_on:
       - grafana
       - mosquitto
+    ports:
+      - '8335:80'
     volumes:
       - ./web/Caddyfile:/etc/caddy/Caddyfile:ro
       - ./web/static:/srv/static:ro
