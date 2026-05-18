@@ -45,6 +45,17 @@ services:
       - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
     restart: unless-stopped
 
+  frontend:
+    container_name: frontend
+    image: caddy:alpine
+    depends_on:
+      - grafana
+      - mosquitto
+    volumes:
+      - ./web/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./web/static:/srv/static:ro
+    restart: unless-stopped
+
 volumes:
   influxDB-data:
   grafana-data:
