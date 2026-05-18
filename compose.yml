@@ -56,6 +56,8 @@ services:
       - mosquitto
     ports:
       - '8335:80'
+    environment:
+      - MQTT_BUZZER_PASS=${MQTT_BUZZER_PASS}
     volumes:
       - ./web/Caddyfile:/etc/caddy/Caddyfile:ro
       - ./web/static:/srv/static:ro

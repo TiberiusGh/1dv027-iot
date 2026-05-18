@@ -8,7 +8,8 @@
 	}
 
 	handle /whoami {
-		respond "ok" 200
+		header Content-Type application/json
+		respond `{"user":"buzzer","pass":"{$MQTT_BUZZER_PASS}"}` 200
 	}
 
 	handle {
