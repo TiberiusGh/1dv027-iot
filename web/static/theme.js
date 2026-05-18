@@ -30,6 +30,27 @@
   // Pre-paint: set theme attribute before CSS paints to avoid a flash.
   applyTheme(readStoredTheme() ?? systemTheme())
 
+  // Follow OS theme changes while no explicit user choice is stored.
+  const mql = window.matchMedia(DARK_QUERY)
+  const onSystemChange = (e) => {
+    if (readStoredTheme()) return
+    const next = e.matches ? 'dark' : 'light'
+    applyTheme(next)
+    const btn = document.getElementById('theme-toggle')
+    if (btn) {
+      btn.innerHTML = ICONS[next]
+      const label =
+        next === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'
+      btn.setAttribute('aria-label', label)
+      btn.setAttribute('title', label)
+    }
+  }
+  if (mql.addEventListener) {
+    mql.addEventListener('change', onSystemChange)
+  } else if (mql.addListener) {
+    mql.addListener(onSystemChange)
+  }
+
   const setupToggle = () => {
     const btn = document.getElementById('theme-toggle')
     if (!btn) return
