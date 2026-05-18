@@ -12,6 +12,17 @@ The TIG stack — Telegraf (ingest), InfluxDB 3 Core (storage), Grafana (dashboa
 
 **Buzzer credentials never ship in the public bundle.** They live in `.env` and are served by Caddy at `/whoami`, which is gated by Cloudflare Access — only an authenticated owner gets them. The MQTT ACL also restricts the `buzzer` user to write-only on `screams/cmd/#` as defense-in-depth.
 
+**Mixed auth: public dashboard, gated controls.** Cloudflare Access gates three paths under the public hostname; the rest is open:
+
+| Path | Who | What |
+|---|---|---|
+| `/`, `/grafana/*` | everyone | static page + read-only embedded charts |
+| `/signin` | owner only | redirect endpoint — triggers login flow, lands at `/` |
+| `/whoami` | owner only | returns MQTT credentials as JSON to the frontend JS |
+| `/mqtt*` | owner only | MQTT-over-WebSocket endpoint for the Buzz button |
+
+The `CF_Authorization` cookie is set by Cloudflare (HttpOnly, Secure, SameSite); the app never reads or writes it.
+
 ## Setup
 
 Uses **InfluxDB 3 Core**, which requires an admin token. After `docker compose up -d`:
