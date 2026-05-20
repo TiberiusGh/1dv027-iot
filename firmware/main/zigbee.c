@@ -12,7 +12,7 @@
 #include "zcl/esp_zigbee_zcl_on_off.h"
 
 #include "buzzer.h"
-#include "source_fake.h"
+#include "source_adc.h"
 
 static const char *TAG = "zigbee";
 
@@ -117,7 +117,7 @@ void esp_zb_app_signal_handler(esp_zb_app_signal_t *signal_struct)
                      esp_zb_get_pan_id(),
                      esp_zb_get_current_channel(),
                      esp_zb_get_short_address());
-            source_fake_set_joined(true);
+            source_adc_set_joined(true);
         } else {
             ESP_LOGW(TAG, "Steering failed (%s) -> retry in 1s", esp_err_to_name(err));
             esp_zb_scheduler_alarm(retry_steering, ESP_ZB_BDB_MODE_NETWORK_STEERING, 1000);
@@ -130,7 +130,7 @@ void esp_zb_app_signal_handler(esp_zb_app_signal_t *signal_struct)
                      esp_zb_get_pan_id(),
                      esp_zb_get_current_channel(),
                      esp_zb_get_short_address());
-            source_fake_set_joined(true);
+            source_adc_set_joined(true);
         } else {
             ESP_LOGW(TAG, "Rejoin failed (%s) -> start steering", esp_err_to_name(err));
             esp_zb_bdb_start_top_level_commissioning(ESP_ZB_BDB_MODE_NETWORK_STEERING);

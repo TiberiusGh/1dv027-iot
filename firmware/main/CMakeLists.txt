@@ -1,5 +1,6 @@
 idf_component_register(SRCS "main.c"
-                            "source_fake.c"
+                            "source_adc.c"
                             "zigbee.c"
                             "buzzer.c"
-                       INCLUDE_DIRS ".")
+                       INCLUDE_DIRS "."
+                       PRIV_REQUIRES esp_adc esp_driver_gpio esp_timer nvs_flash)

@@ -5,7 +5,7 @@
 #include "esp_zigbee_core.h"
 
 #include "buzzer.h"
-#include "source_fake.h"
+#include "source_adc.h"
 #include "zigbee.h"
 
 static const char *TAG = "screams";
@@ -23,5 +23,5 @@ void app_main(void)
     ESP_LOGI(TAG, "Screams sensor booting (Zigbee ED)...");
     buzzer_init();
     zigbee_start();
-    source_fake_start(ZIGBEE_ENDPOINT_ID);
+    source_adc_start(ZIGBEE_ENDPOINT_ID);
 }

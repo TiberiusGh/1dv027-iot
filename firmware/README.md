@@ -23,7 +23,7 @@ idf.py erase-flash flash monitor
 
 - [main/main.c](main/main.c) — wires the modules together
 - [main/zigbee.c](main/zigbee.c) — radio, clusters, BDB join/rejoin/retry, On/Off attribute callback
-- [main/source_fake.c](main/source_fake.c) — placeholder sample source (sine + spikes) until the real ADC/mic source lands
+- [main/source_adc.c](main/source_adc.c) — continuous ADC on GPIO1 at 8 kHz, 100 ms stddev windows, publishes the RMS scalar
 - [main/buzzer.c](main/buzzer.c) — GPIO10 active-piezo driver, one-shot 200 ms pulse
 
 ## Key choices
@@ -57,6 +57,26 @@ from HA. On any `On` write, firmware drives GPIO10 HIGH for 200 ms — that's th
 whole device-side contract. HA owns the on→off cycle in its automation (turn_on,
 short delay, turn_off), so the device never has to fight HA's optimistic state
 model.
+
+## Sound capture path (designed with AI assistance)
+
+The mic, sampling, and RMS choices below were worked through in conversation
+with an AI assistant. If you spot a misjudgement, please open an issue or email
+tiberius.gherac@gmail.com.
+
+- **MAX4466 electret mic, manual gain pot.** AGC mics (e.g. MAX9814) would
+  actively flatten the loudness dynamic range we need to measure.
+- **ADC at 8 kHz.** Nyquist gives 4 kHz of usable bandwidth — enough to capture
+  the screechy 1–4 kHz energy of a baby cry. 2 kHz would under-report perceived
+  loudness.
+- **100 ms RMS window via stddev.** The mic biases around VCC/2, so raw RMS is
+  dominated by the DC offset. Computing stddev per window auto-subtracts that
+  bias (and tracks any drift with temperature / supply voltage).
+- **dB-relative display in Grafana**, computed at the panel as
+  `20 * log10(rms / noise_floor)`. Raw RMS stays in InfluxDB. Log scale matches
+  human hearing and keeps quiet + loud both readable on one axis.
+- **Gain pot tuned once at install.** Set so loud sounds approach the ADC top
+  without clipping at 4095 — clipping permanently erases dynamic range.
 
 ## ZHA pairing
 
