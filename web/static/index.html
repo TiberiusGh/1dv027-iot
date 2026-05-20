@@ -88,7 +88,7 @@
 
       <section class="panel-section">
         <h2 class="section-title">Live signal</h2>
-        <div class="callout callout-caution" role="note">
+        <!-- <div class="callout callout-caution" role="note">
           <p class="callout-title">
             <svg
               width="18"
@@ -112,8 +112,8 @@
           <p class="callout-body">
             The charts below currently display <strong>mocked data</strong>
             while waiting for the physical sensor to get delivered.
-          </p>
-        </div>
+          </p> 
+        </div> -->
         <div class="panels">
           <iframe
             src="/grafana/d-solo/adm6d76/iot-screams?orgId=1&timezone=browser&refresh=auto&panelId=panel-1"
@@ -205,39 +205,23 @@
           together. So the dashboards above are embedded straight from the
           Grafana instance running in the same Docker compose.
         </p>
-      </section>
 
-      <section id="features" class="section-measure">
-        <h2 class="section-title">Key ingredients</h2>
-        <ul class="feature-list">
-          <li>
-            <strong>ESP32&#8209;H2</strong> &mdash; Zigbee end device, no WiFi
-            by design
-          </li>
-          <li>
-            <strong>On-chip RMS</strong> &mdash; ~2&nbsp;kHz ADC, 100&nbsp;ms
-            windows, raw audio never leaves the device
-          </li>
-          <li>
-            <strong>Zigbee Analog Input cluster (0x000C)</strong> &mdash; one
-            scalar at 10&nbsp;Hz
-          </li>
-          <li>
-            <strong>Home Assistant + ZHA</strong> &mdash; mirrors state to MQTT
-            via <code>mqtt_statestream</code>
-          </li>
-          <li>
-            <strong
-              >Mosquitto &middot; Telegraf &middot; InfluxDB &middot;
-              Grafana</strong
-            >
-            &mdash; the TIG pipeline + embedded dashboards
-          </li>
-          <li>
-            <strong>Caddy + signed cookies</strong> &mdash; reverse proxy, auth,
-            and the buzz-back command channel
-          </li>
-        </ul>
+        <p>
+          More documentation can be found in the
+          <a
+            href="https://github.com/TiberiusGh/1dv027-iot"
+            target="_blank"
+            rel="noopener noreferrer"
+            >repo's README</a
+          >
+          and the
+          <a
+            href="https://github.com/TiberiusGh/1dv027-iot/tree/main/firmware"
+            target="_blank"
+            rel="noopener noreferrer"
+            >firmware's README</a
+          >.
+        </p>
       </section>
 
       <footer>
@@ -250,11 +234,12 @@
         ></button>
         <p>ESP32-H2 · Zigbee · MQTT · InfluxDB · Grafana</p>
         <p>
+          &copy; 2026 tiberius gherac ·
           <a
             href="https://github.com/TiberiusGh/1dv027-iot"
             target="_blank"
             rel="noopener noreferrer"
-            >Source on GitHub</a
+            >View source on GitHub</a
           >
         </p>
       </footer>
