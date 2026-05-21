@@ -10,20 +10,38 @@
     <title>Screams sensor</title>
 
     <link rel="icon" type="image/svg+xml" href="/favicons/favicon.svg" />
-    <link rel="icon" type="image/png" sizes="96x96" href="/favicons/favicon-96x96.png" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="96x96"
+      href="/favicons/favicon-96x96.png"
+    />
     <link rel="shortcut icon" href="/favicons/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/favicons/apple-touch-icon.png"
+    />
     <link rel="manifest" href="/favicons/site.webmanifest" />
 
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://screams.tiberiusgh.com/" />
     <meta property="og:title" content="Screams sensor" />
-    <meta property="og:description" content="Live loudness from an ESP32-H2 over Zigbee. Raw audio never leaves the device." />
+    <meta
+      property="og:description"
+      content="Live loudness from an ESP32-H2 over Zigbee. Raw audio never leaves the device."
+    />
     <meta property="og:image" content="https://screams.tiberiusgh.com/og.png" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Screams sensor" />
-    <meta name="twitter:description" content="Live loudness from an ESP32-H2 over Zigbee. Raw audio never leaves the device." />
-    <meta name="twitter:image" content="https://screams.tiberiusgh.com/og.png" />
+    <meta
+      name="twitter:description"
+      content="Live loudness from an ESP32-H2 over Zigbee. Raw audio never leaves the device."
+    />
+    <meta
+      name="twitter:image"
+      content="https://screams.tiberiusgh.com/og.png"
+    />
 
     <link rel="preconnect" href="https://rsms.me/" />
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
@@ -133,12 +151,16 @@
         </div> -->
         <div class="panels">
           <iframe
-            src="/grafana/d-solo/adm6d76/iot-screams?orgId=1&timezone=browser&refresh=auto&panelId=panel-1"
+            src="/grafana/d-solo/adm6d76/iot-screams?orgId=1&from=now-10m&to=now&timezone=browser&refresh=1s&panelId=panel-1"
             title="Loudness over time"
           ></iframe>
           <iframe
-            src="/grafana/d-solo/adm6d76/iot-screams?orgId=1&timezone=browser&refresh=auto&panelId=panel-2"
+            src="/grafana/d-solo/adm6d76/iot-screams?orgId=1&timezone=browser&refresh=1s&panelId=panel-2"
             title="Current level"
+          ></iframe>
+          <iframe
+            src="/grafana/d-solo/adm6d76/iot-screams?orgId=1&from=now-7d&to=now&timezone=browser&refresh=1s&panelId=panel-4"
+            title="Last scream"
           ></iframe>
         </div>
       </section>
@@ -175,23 +197,33 @@
       <section id="about" class="section-measure">
         <h2 class="section-title">About</h2>
         <p>
-          I recently added a Zigbee antenna to my Home Assistant setup and
-          wanted to play with the protocol. My last build, a
+          I recently added a Zigbee antenna (a low-power wireless protocol
+          common in smart-home devices) to my Home Assistant setup and wanted to
+          play with the protocol. My last build, a
           <a
             href="https://github.com/TiberiusGh/magic-wand"
             target="_blank"
             rel="noopener noreferrer"
             >magic wand</a
           >, went the WiFi route, so this time I wanted to try something
-          different. The ESP32-H2 was a perfect fit since it has Zigbee, Thread
-          and BLE on-chip and no WiFi at all.
+          different. The ESP32-H2 was a perfect fit since it has Zigbee &mdash;
+          and I like that Zigbee bakes encryption into the protocol itself, so
+          the link between the device and the coordinator is secured by default,
+          no extra crypto layer to wire up.
+        </p>
+        <p>
+          In plain numbers: the microphone is read about 2,000 times a second,
+          an average of those numbers is calculated resulting in 10 average
+          datapoints for each second that are sent to the database over the air.
+          For each second, every minute, every hour of the day.
         </p>
         <p>
           The ESP32&#8209;H2 doesn&rsquo;t speak IP at all &mdash; only Zigbee
           &mdash; so everything has to pass through the
           <strong>ZBT&#8209;2 USB coordinator</strong> into
-          <strong>Home Assistant</strong>. HA ends up acting as the bridge
-          between the radio and the rest of the stack, in both directions.
+          <strong>Home Assistant</strong>. Home Assistant ends up acting as the
+          bridge between the radio and the rest of the stack, in both
+          directions.
         </p>
 
         <p class="flow-label">Telemetry &mdash; sensor &rarr; chart</p>
@@ -209,9 +241,8 @@
         <p>
           On the HA side, telemetry is bridged out via
           <code>mqtt_statestream</code>, and commands are handled by an
-          automation that subscribes to <code>screams/cmd/buzz</code> and
-          forwards them to the device through ZHA&rsquo;s
-          <strong>On/Off cluster (0x0006)</strong>.
+          automation that subscribes to <code>screams/cmd/buzz</code> and relays
+          them on to the board.
         </p>
 
         <p>
