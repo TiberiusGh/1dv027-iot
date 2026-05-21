@@ -4,6 +4,17 @@ ESP32-H2 Zigbee end device. Publishes a loudness scalar 10× per second to a ZBT
 coordinator running ZHA in Home Assistant, and also accepts a buzz command back
 the other way (HA → ZHA → device → GPIO → piezo beep).
 
+## Wiring
+
+![Wiring diagram](circuit.png)
+
+| ESP32-H2 pin | Connects to                |
+|--------------|----------------------------|
+| `3V3`        | MAX4466 `VCC`              |
+| `GND`        | MAX4466 `GND`, buzzer `−`  |
+| `GPIO1`      | MAX4466 `OUT` (ADC1_CH0)   |
+| `GPIO10`     | Buzzer `+`                 |
+
 ## Build & flash
 
 ```sh
