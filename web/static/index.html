@@ -123,7 +123,8 @@
 
       <section class="panel-section">
         <h2 class="section-title">Live signal</h2>
-        <!-- <div class="callout callout-caution" role="note">
+
+        <div class="callout callout-caution" role="note">
           <p class="callout-title">
             <svg
               width="18"
@@ -145,10 +146,12 @@
             Caution
           </p>
           <p class="callout-body">
-            The charts below currently display <strong>mocked data</strong>
-            while waiting for the physical sensor to get delivered.
-          </p> 
-        </div> -->
+            The microphone is sitting loosely in the board, so it doesn't pick
+            up sound reliably. As a result, the charts may show inaccurate or
+            missing data.
+          </p>
+        </div>
+
         <div class="panels">
           <iframe
             src="/grafana/d-solo/adm6d76/iot-screams?orgId=1&from=now-10m&to=now&timezone=browser&refresh=1s&panelId=panel-1"
