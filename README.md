@@ -4,7 +4,7 @@ A 1DV027 course project. Measures noise level in a room and visualises it over t
 
 ## Stack
 
-The TIG stack — Telegraf (ingest), InfluxDB 3 Core (storage), Grafana (dashboards) — with Mosquitto as the MQTT broker and Caddy reverse-proxying the UIs. The ESP32 publishes to MQTT, Telegraf subscribes and writes to InfluxDB, Grafana queries InfluxDB.
+The TIG stack — Telegraf (ingest), InfluxDB 3 Core (storage), Grafana (dashboards) — with Mosquitto as the MQTT broker and Caddy reverse-proxying the UIs. The ESP32 is a Zigbee end device: it reports loudness over Zigbee to a ZBT-2 coordinator paired with Home Assistant, which bridges the readings to MQTT via `mqtt_statestream`. From there, Telegraf subscribes and writes to InfluxDB, and Grafana queries InfluxDB.
 
 ## Key decisions
 
@@ -35,3 +35,7 @@ docker compose exec influx influxdb3 create database iot --token "$TOKEN"
 ```
 
 Save the token from the first command as `TOKEN=…` in `.env`.
+
+## Firmware
+
+See the [firmware README](https://github.com/TiberiusGh/1dv027-iot/tree/main/firmware) for details on the ESP32-H2 build, wiring, and Zigbee setup.
