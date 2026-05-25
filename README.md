@@ -12,31 +12,35 @@ Sensor readings travel up the left-hand chain; the Buzz button rides the same br
 
 ```mermaid
 flowchart TD
-  H2[ESP32-H2 + MAX4466]
+  MIC[MAX4466 mic]
+  H2[ESP32-H2]
+  BZ[Buzzer]
   ZBT[ZBT-2 coordinator]
   ZHA[Home Assistant / ZHA]
-  CADDY[Caddy reverse proxy]
   MQ[Mosquitto]
   TG[Telegraf]
   DB[(InfluxDB 3)]
   GF[Grafana]
+  CADDY[Caddy reverse proxy]
   WEB[Browser dashboard]
-  BZ[Buzzer]
+
+  MIC -->|analog out → GPIO ADC| H2
+  H2 -->|GPIO digital| BZ
 
   H2 -->|Zigbee Analog Input 0x000C| ZBT
   ZBT -->|USB / EZSP| ZHA
-  ZHA -->|MQTT publish: mqtt_statestream| MQ
-  MQ -->|MQTT subscribe| TG
+  ZHA -->|MQTT publish: homeassistant/sensor/+/state| MQ
+  MQ -->|MQTT subscribe: homeassistant/sensor/+/state| TG
   TG -->|HTTP: line protocol| DB
   DB -->|HTTP: FlightSQL| GF
-  GF -.HTTPS iframe.-> WEB
+  GF -->|HTTP: panels| CADDY
+  CADDY -->|HTTPS: dashboard + Grafana iframes| WEB
 
   WEB -->|HTTPS / WSS| CADDY
   CADDY -->|MQTT over WS: screams/cmd/buzz| MQ
-  MQ -->|MQTT subscribe| ZHA
+  MQ -->|MQTT subscribe: screams/cmd/buzz| ZHA
   ZHA -->|USB / EZSP| ZBT
   ZBT -->|Zigbee On/Off 0x0006| H2
-  H2 -->|GPIO| BZ
 ```
 
 ## MQTT topics & payloads
