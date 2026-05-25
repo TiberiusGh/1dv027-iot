@@ -24,15 +24,15 @@ flowchart TD
   CADDY[Caddy reverse proxy]
   WEB[Browser dashboard]
 
-  MIC -->|analog out → GPIO ADC| H2
-  H2 -->|GPIO digital| BZ
+  MIC -->|GPIO| H2
+  H2 -->|GPIO| BZ
 
-  H2 -->|Zigbee Analog Input 0x000C| ZBT
+  H2 -->|Zigbee| ZBT
   ZBT -->|USB / EZSP| ZHA
-  ZHA -->|MQTT publish: homeassistant/sensor/+/state| MQ
-  MQ -->|MQTT subscribe: homeassistant/sensor/+/state| TG
+  ZHA -->|MQTT publish: homeassistant/sensor/&lt;entity_id&gt;/state| MQ
+  MQ -->|MQTT subscribe: homeassistant/sensor/&lt;entity_id&gt;/state| TG
   TG -->|HTTP: line protocol| DB
-  DB -->|HTTP: FlightSQL| GF
+  DB -->|HTTP query| GF
   GF -->|HTTP: panels| CADDY
   CADDY -->|HTTPS: dashboard + Grafana iframes| WEB
 
@@ -40,7 +40,7 @@ flowchart TD
   CADDY -->|MQTT over WS: screams/cmd/buzz| MQ
   MQ -->|MQTT subscribe: screams/cmd/buzz| ZHA
   ZHA -->|USB / EZSP| ZBT
-  ZBT -->|Zigbee On/Off 0x0006| H2
+  ZBT -->|Zigbee| H2
 ```
 
 ## MQTT topics & payloads
