@@ -8,12 +8,12 @@ the other way (HA → ZHA → device → GPIO → piezo beep).
 
 ![Wiring diagram](circuit.png)
 
-| ESP32-H2 pin | Connects to                |
-|--------------|----------------------------|
-| `3V3`        | MAX4466 `VCC`              |
-| `GND`        | MAX4466 `GND`, buzzer `−`  |
-| `GPIO1`      | MAX4466 `OUT` (ADC1_CH0)   |
-| `GPIO10`     | Buzzer `+`                 |
+| ESP32-H2 pin | Connects to               |
+| ------------ | ------------------------- |
+| `3V3`        | MAX4466 `VCC`             |
+| `GND`        | MAX4466 `GND`, buzzer `−` |
+| `GPIO1`      | MAX4466 `OUT` (ADC1_CH0)  |
+| `GPIO10`     | Buzzer `+`                |
 
 ## Build & flash
 
@@ -71,9 +71,8 @@ model.
 
 ## Sound capture path (designed with AI assistance)
 
-The mic, sampling, and RMS choices below were worked through in conversation
-with an AI assistant. If you spot a misjudgement, please open an issue or email
-tiberius.gherac@gmail.com.
+The mic, sampling, and RMS choices were worked through in conversation
+with an AI assistant. If you spot a misjudgement, please let me know by opening an issue or email me at tiberius.gherac@gmail.com.
 
 - **MAX4466 electret mic, manual gain pot.** AGC mics (e.g. MAX9814) would
   actively flatten the loudness dynamic range we need to measure.
