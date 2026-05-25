@@ -11,7 +11,7 @@ The TIG stack — Telegraf (ingest), InfluxDB 3 Core (storage), Grafana (dashboa
 Sensor readings travel up the left-hand chain; the Buzz button rides the same broker back down through HA.
 
 ```mermaid
-flowchart LR
+flowchart TD
   H2[ESP32-H2 + MAX4466]
   ZBT[ZBT-2 coordinator]
   ZHA[Home Assistant / ZHA]
@@ -47,7 +47,6 @@ Every MQTT topic the system uses, what publishes / subscribes to it, and the pay
 | ---------------------------------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ---------------------------- | ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `homeassistant/sensor/<entity_id>/state` | HA → broker → Telegraf      | Float as ASCII (e.g. `342.7`) — the raw RMS scalar from the ADC window, unitless                                               | 10 Hz                        | 0 / no       | Published by HA's `mqtt_statestream` after ZHA receives a Zigbee `Analog Input 0x000C` Report Attributes from the H2. Telegraf's `mqtt_consumer` parses the value as a float and writes it to InfluxDB as `audio.rms` (see [telegraf/telegraf.conf](telegraf/telegraf.conf)).                            |
 | `screams/cmd/buzz`                       | Browser → broker → HA       | Literal string `1` — content is ignored, the message itself is the trigger (see [web/static/app.js:43](web/static/app.js#L43)) | On user click (sporadic)     | 0 / no       | Browser publishes over MQTT-over-WSS through Caddy. HA automation subscribes and fires `zha.issue_zigbee_cluster_command` with On/Off cluster `0x0006`. ACL restricts the `buzzer` user to _write-only_ on `screams/cmd/#` — defense-in-depth so a leaked browser credential cannot read sensor traffic. |
-| `audio/fake`                             | `fake_stream.py` → Telegraf | InfluxDB line protocol (e.g. `audio rms=412.3`)                                                                                | Configurable (script-driven) | 0 / no       | Dev-only path from before the real ADC source existed. Lets the dashboard be exercised end-to-end without the hardware attached. Still wired up in Telegraf's first `mqtt_consumer` block; safe to ignore in the production path.                                                                        |
 
 Topic naming follows two conventions: HA-owned topics live under `homeassistant/…` because that's where `mqtt_statestream` puts them by default, and project-owned topics live under `screams/…` (the working name for the sensor). The two namespaces don't overlap, which keeps the ACL straightforward.
 
