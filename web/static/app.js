@@ -45,4 +45,27 @@ async function init() {
   })
 }
 
+// A friendly note for anyone who pops open the console.
+function logConsoleGreeting() {
+  const styles = getComputedStyle(document.documentElement)
+  const accent = styles.getPropertyValue('--color-accent').trim() || '#0d9488'
+  const sans =
+    styles.getPropertyValue('--font-sans').trim() || 'system-ui, sans-serif'
+
+  console.log(
+    '%cHi 👋',
+    `color: ${accent}; font-family: ${sans}; font-size: 15px; font-weight: 600;`
+  )
+
+  console.log(
+    '%cNice that you noticed this message. Checkout more of my work:',
+    `color: ${accent}; font-family: ${sans}; font-size: 15px; font-weight: 600;`
+  )
+
+  console.log('https://tiberiusgh.com')
+  console.log('https://github.com/TiberiusGh')
+  console.log('https://www.linkedin.com/in/tiberius-gh/')
+}
+
+logConsoleGreeting()
 init()
